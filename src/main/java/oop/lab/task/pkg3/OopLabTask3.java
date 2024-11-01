@@ -1,8 +1,9 @@
 package oop.lab.task.pkg3;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 
 class Garment {
     public String id;
@@ -23,11 +24,11 @@ class Garment {
         this.stockQuantity = stockQuantity;
     }
 
-    void updateStock(int quantity) {
+    public void updateStock(int quantity) {
         this.stockQuantity = quantity;
     }
 
-    double calculateDiscountPrice(double discountPercentage) {
+    public double calculateDiscountPrice(double discountPercentage) {
         double discount = price * (discountPercentage / 100);
         return price - discount;
     }
@@ -46,7 +47,7 @@ class Fabric {
         this.pricePerMeter = pricePerMeter;
     }
 
-    double calculateCost(double meters) {
+    public double calculateCost(double meters) {
         return pricePerMeter * meters;
     }
 }
@@ -63,11 +64,11 @@ class Supplier {
         this.contactInfo = contactInfo;
     }
 
-    void addFabric(Fabric fabric) {
+    public void addFabric(Fabric fabric) {
         suppliedFabric.add(fabric);
     }
 
-    List<Fabric> getSuppliedFabrics() {
+    public List<Fabric> getSuppliedFabrics() {
         return suppliedFabric;
     }
 }
@@ -83,11 +84,11 @@ class Order {
         this.orderDate = orderDate;
     }
 
-    void addGarment(Garment garment) {
+    public void addGarment(Garment garment) {
         garments.add(garment);
     }
 
-    double calculateTotalAmount() {
+    public double calculateTotalAmount() {
         totalAmount = 0;
         for (Garment g : garments) {
             totalAmount += g.price;
@@ -95,17 +96,15 @@ class Order {
         return totalAmount;
     }
 
-    void printOrderDetails() {
+    public void printOrderDetails() {
         System.out.println("--------------------------");
         System.out.println("Order Details");
         System.out.println("--------------------------");
         for (Garment g : garments) {
-            System.out.println("Name: " + g.name);
-            System.out.println("Price: " + g.price);
-            System.out.println("Description: " + g.description);
-            System.out.println("--------------------------");
+            System.out.println("ID: " + g.id + ", Name: " + g.name + ", Price: " + g.price + ", Description: " + g.description);
         }
         System.out.println("Total Amount: " + calculateTotalAmount());
+        System.out.println("--------------------------");
     }
 }
 
@@ -122,7 +121,7 @@ class Customer {
         this.phone = phone;
     }
 
-    void placeOrder(Order order) {
+    public void placeOrder(Order order) {
         order.printOrderDetails();
         System.out.println("Order Placed");
     }
@@ -131,28 +130,114 @@ class Customer {
 class Inventory {
     List<Garment> garments = new ArrayList<>();
 
-    void addGarment(Garment garment) {
+    public void addGarment(Garment garment) {
         garments.add(garment);
     }
 
-    void removeGarment(String id) {
+    public void removeGarment(String id) {
         garments.removeIf(g -> g.id.equals(id));
     }
 
-    Garment findGarment(String id) {
+    public Garment findGarment(String id) {
         for (Garment g : garments) {
-            if (g.id.equals(id)) {
-                return g;
-            }
+            if (g.id.equals(id)) return g;
         }
         return null;
+    }
+
+    public void viewGarments() {
+        if (garments.isEmpty()) {
+            System.out.println("No garments available.");
+        } else {
+            System.out.println("List of Garments:");
+            for (Garment g : garments) {
+                System.out.println("ID: " + g.id + ", Name: " + g.name + ", Stock: " + g.stockQuantity);
+            }
+        }
     }
 }
 
 public class OopLabTask3 {
     public static void main(String[] args) {
-        Garment g1 = new Garment("G001", "Silk", "Good Product", "M", "Red", 600, 100);
-        double x = g1.calculateDiscountPrice(10);
-        System.out.println("Discounted Price: " + x);
+        Scanner scanner = new Scanner(System.in);
+        Inventory inventory = new Inventory();
+        int choice;
+
+        do {
+            System.out.println("Garment Management System Menu");
+            System.out.println("1. Add Garment");
+            System.out.println("2. View Garments");
+            System.out.println("3. Add Supplier");
+            System.out.println("4. Place Order");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Garment ID: ");
+                    String id = scanner.nextLine();
+                    System.out.print("Enter Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter Description: ");
+                    String description = scanner.nextLine();
+                    System.out.print("Enter Size: ");
+                    String size = scanner.nextLine();
+                    System.out.print("Enter Color: ");
+                    String color = scanner.nextLine();
+                    System.out.print("Enter Price: ");
+                    double price = scanner.nextDouble();
+                    System.out.print("Enter Stock Quantity: ");
+                    int stockQuantity = scanner.nextInt();
+                    inventory.addGarment(new Garment(id, name, description, size, color, price, stockQuantity));
+                    System.out.println("Garment added successfully!");
+                    break;
+
+                case 2:
+                    inventory.viewGarments();
+                    break;
+
+                case 3:
+                    System.out.print("Enter Supplier ID: ");
+                    String supplierId = scanner.nextLine();
+                    System.out.print("Enter Supplier Name: ");
+                    String supplierName = scanner.nextLine();
+                    System.out.print("Enter Contact Info: ");
+                    String contactInfo = scanner.nextLine();
+                    Supplier supplier = new Supplier(supplierId, supplierName, contactInfo);
+                    System.out.println("Supplier added successfully!");
+                    break;
+
+                case 4:
+                    System.out.print("Enter Order ID: ");
+                    String orderId = scanner.nextLine();
+                    Order order = new Order(orderId, new Date());
+                    System.out.print("How many garments do you want to add to the order? ");
+                    int numberOfGarments = scanner.nextInt();
+                    scanner.nextLine();
+                    for (int i = 0; i < numberOfGarments; i++) {
+                        System.out.print("Enter Garment ID: ");
+                        String garmentId = scanner.nextLine();
+                        Garment garment = inventory.findGarment(garmentId);
+                        if (garment != null) {
+                            order.addGarment(garment);
+                        } else {
+                            System.out.println("Garment not found!");
+                        }
+                    }
+                    order.printOrderDetails();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 5);
+
+        scanner.close();
     }
 }
