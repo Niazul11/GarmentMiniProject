@@ -84,3 +84,40 @@ class Order {
     }
 }
 
+class Customer {
+
+    public String customerId;
+    public String name;
+    public String email;
+    public String phone;
+
+    void placeOrder(Order order) {
+        order.printOrderDetails();
+        System.out.println("Order Placed");
+    }
+
+//    List<Order> viewOrders() {
+//        
+//    }
+}
+
+class Inventory {
+
+    List<Garment> garments;
+
+    void addGarment(Garment garment) {
+        garments.add(garment);
+    }
+
+    void removeGarment(String id) {
+        garments.remove(id);
+    }
+
+    Garment findGarment(String id) {
+        for (Garment g : garments) {
+            if(g.id == id)
+                return g;
+        }
+        return null;
+    }
+}
