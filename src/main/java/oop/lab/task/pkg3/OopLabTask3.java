@@ -79,12 +79,10 @@ class Order {
     public Date orderDate;
     public List<Garment> garments = new ArrayList<>();
     private double totalAmount;
-    private double discountPercentage;
 
-    public Order(String orderId, Date orderDate, double discountPercentage) {
+    public Order(String orderId, Date orderDate) {
         this.orderId = orderId;
         this.orderDate = orderDate;
-        this.discountPercentage = discountPercentage;
     }
 
     void addGarment(Garment garment) {
@@ -96,8 +94,7 @@ class Order {
         for (Garment g : garments) {
             totalAmount += g.price;
         }
-        double discount = totalAmount * (discountPercentage / 100);
-        return totalAmount - discount;
+        return totalAmount;
     }
 
     void printOrderDetails() {
@@ -110,7 +107,19 @@ class Order {
             System.out.println("Description: " + g.description);
             System.out.println("--------------------------");
         }
-        System.out.println("Total Amount after Discount: " + calculateTotalAmount());
+        System.out.println("Total Amount: " + calculateTotalAmount());
+    }
+
+    void generateInvoice(Customer customer) {
+        System.out.println("Invoice");
+        System.out.println("Order ID: " + orderId);
+        System.out.println("Order Date: " + orderDate);
+        System.out.println("Customer Name: " + customer.name);
+        System.out.println("Customer Email: " + customer.email);
+        System.out.println("--------------------------");
+        printOrderDetails();
+        System.out.println("--------------------------");
+        System.out.println("Thank you for your purchase!");
     }
 }
 
@@ -211,9 +220,7 @@ public class OopLabTask3 {
                 case 4:
                     System.out.print("Enter Order ID: ");
                     String orderId = scanner.nextLine();
-                    System.out.print("Enter Discount Percentage: ");
-                    double discountPercentage = scanner.nextDouble();
-                    Order order = new Order(orderId, new Date(), discountPercentage);
+                    Order order = new Order(orderId, new Date());
                     System.out.print("How many garments do you want to add to the order? ");
                     int numberOfGarments = scanner.nextInt();
                     scanner.nextLine();
@@ -227,7 +234,8 @@ public class OopLabTask3 {
                             System.out.println("Garment not found!");
                         }
                     }
-                    order.printOrderDetails();
+                    System.out.println("Total Amount: " + order.calculateTotalAmount());
+                    order.generateInvoice(new Customer("C1", "John Doe", "john@example.com", "1234567890"));
                     break;
 
                 case 5:
