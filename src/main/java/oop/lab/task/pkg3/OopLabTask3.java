@@ -1,8 +1,8 @@
 package oop.lab.task.pkg3;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 class Garment {
@@ -24,11 +24,11 @@ class Garment {
         this.stockQuantity = stockQuantity;
     }
 
-    public void updateStock(int quantity) {
+    void updateStock(int quantity) {
         this.stockQuantity = quantity;
     }
 
-    public double calculateDiscountPrice(double discountPercentage) {
+    double calculateDiscountPrice(double discountPercentage) {
         double discount = price * (discountPercentage / 100);
         return price - discount;
     }
@@ -47,8 +47,9 @@ class Fabric {
         this.pricePerMeter = pricePerMeter;
     }
 
-    public double calculateCost(double meters) {
-        return pricePerMeter * meters;
+    double calculateCost(double meters) {
+        double newPrice = pricePerMeter * meters;
+        return newPrice;
     }
 }
 
@@ -64,11 +65,11 @@ class Supplier {
         this.contactInfo = contactInfo;
     }
 
-    public void addFabric(Fabric fabric) {
+    void addFabric(Fabric fabric) {
         suppliedFabric.add(fabric);
     }
 
-    public List<Fabric> getSuppliedFabrics() {
+    List<Fabric> getSuppliedFabrics() {
         return suppliedFabric;
     }
 }
@@ -78,33 +79,38 @@ class Order {
     public Date orderDate;
     public List<Garment> garments = new ArrayList<>();
     private double totalAmount;
+    private double discountPercentage;
 
-    public Order(String orderId, Date orderDate) {
+    public Order(String orderId, Date orderDate, double discountPercentage) {
         this.orderId = orderId;
         this.orderDate = orderDate;
+        this.discountPercentage = discountPercentage;
     }
 
-    public void addGarment(Garment garment) {
+    void addGarment(Garment garment) {
         garments.add(garment);
     }
 
-    public double calculateTotalAmount() {
+    double calculateTotalAmount() {
         totalAmount = 0;
         for (Garment g : garments) {
             totalAmount += g.price;
         }
-        return totalAmount;
+        double discount = totalAmount * (discountPercentage / 100);
+        return totalAmount - discount;
     }
 
-    public void printOrderDetails() {
+    void printOrderDetails() {
         System.out.println("--------------------------");
         System.out.println("Order Details");
         System.out.println("--------------------------");
         for (Garment g : garments) {
-            System.out.println("ID: " + g.id + ", Name: " + g.name + ", Price: " + g.price + ", Description: " + g.description);
+            System.out.println("Name: " + g.name);
+            System.out.println("Price: " + g.price);
+            System.out.println("Description: " + g.description);
+            System.out.println("--------------------------");
         }
-        System.out.println("Total Amount: " + calculateTotalAmount());
-        System.out.println("--------------------------");
+        System.out.println("Total Amount after Discount: " + calculateTotalAmount());
     }
 }
 
@@ -121,7 +127,7 @@ class Customer {
         this.phone = phone;
     }
 
-    public void placeOrder(Order order) {
+    void placeOrder(Order order) {
         order.printOrderDetails();
         System.out.println("Order Placed");
     }
@@ -130,30 +136,20 @@ class Customer {
 class Inventory {
     List<Garment> garments = new ArrayList<>();
 
-    public void addGarment(Garment garment) {
+    void addGarment(Garment garment) {
         garments.add(garment);
     }
 
-    public void removeGarment(String id) {
+    void removeGarment(String id) {
         garments.removeIf(g -> g.id.equals(id));
     }
 
-    public Garment findGarment(String id) {
+    Garment findGarment(String id) {
         for (Garment g : garments) {
-            if (g.id.equals(id)) return g;
+            if (g.id.equals(id))
+                return g;
         }
         return null;
-    }
-
-    public void viewGarments() {
-        if (garments.isEmpty()) {
-            System.out.println("No garments available.");
-        } else {
-            System.out.println("List of Garments:");
-            for (Garment g : garments) {
-                System.out.println("ID: " + g.id + ", Name: " + g.name + ", Stock: " + g.stockQuantity);
-            }
-        }
     }
 }
 
@@ -195,7 +191,10 @@ public class OopLabTask3 {
                     break;
 
                 case 2:
-                    inventory.viewGarments();
+                    System.out.println("List of Garments:");
+                    for (Garment g : inventory.garments) {
+                        System.out.println("ID: " + g.id + ", Name: " + g.name);
+                    }
                     break;
 
                 case 3:
@@ -212,7 +211,9 @@ public class OopLabTask3 {
                 case 4:
                     System.out.print("Enter Order ID: ");
                     String orderId = scanner.nextLine();
-                    Order order = new Order(orderId, new Date());
+                    System.out.print("Enter Discount Percentage: ");
+                    double discountPercentage = scanner.nextDouble();
+                    Order order = new Order(orderId, new Date(), discountPercentage);
                     System.out.print("How many garments do you want to add to the order? ");
                     int numberOfGarments = scanner.nextInt();
                     scanner.nextLine();
