@@ -96,9 +96,7 @@ class Customer {
         System.out.println("Order Placed");
     }
 
-//    List<Order> viewOrders() {
-//        
-//    }
+
 }
 
 class Inventory {
@@ -120,4 +118,18 @@ class Inventory {
         }
         return null;
     }
+}
+
+public class OopLabTask3 {
+
+    public static void main(String[] args) {
+        Garment g1 = new Garment();
+        g1.name = "Silk";
+        g1.description = "Good Product";
+        g1.price= 600;
+        double x = g1.calculateDiscountPrice(10);
+        System.out.println(x);
+
+    }
+
 }
