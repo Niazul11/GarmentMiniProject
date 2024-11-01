@@ -1,13 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package oop.lab.task.pkg3;
+//importing list and array list
 
-/**
- *
- * @author NiAjuL
- */
-public class Garment {
-    
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
+
+class Garment {
+
+    public String id;
+    public String name;
+    public String description;
+    public String size;
+    public String color;
+    public double price;
+    public int stockQuantity;
+
+    void updateStock(int quantity) {
+        this.stockQuantity = quantity;
+    }
+
+    double calculateDiscountPrice(double discountPercentage) {
+        double discount = price * (discountPercentage / 100);
+        return discount;
+    }
 }
